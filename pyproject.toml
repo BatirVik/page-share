@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "page-share"
+version = "0.1.0"
+description = ""
+authors = ["batir <batir.vik@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.2"
+pyright = "^1.1.378"
+pytest-asyncio = "^0.24.0"
+
+[tool.pyright]
+venvPath = "/Users/batir/Library/Caches/pypoetry/virtualenvs/"
+venv = "page-share-CfJdJVOm-py3.12"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+pydantic-settings = "^2.4.0"
+sqlalchemy = { extras = ["psycopg"], version = "^2.0.32" }
+loguru = "^0.7.2"
+fastapi = "^0.112.2"
+uvicorn = "^0.30.6"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

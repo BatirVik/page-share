@@ -24,5 +24,5 @@ if MODE not in DOTENV_FILENAMES:
         " Available values are ['dev', 'test', 'prod']"
     )
 
-DOTENV_PATH = Path(__file__).parent.parent / DOTENV_FILENAMES[MODE]
+DOTENV_PATH = Path(__file__).parent.parent / "configuration" / DOTENV_FILENAMES[MODE]
 config = Config(_env_file=DOTENV_PATH)  # type: ignore

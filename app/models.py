@@ -13,3 +13,11 @@ class Base(DeclarativeBase):
     updated_at: Mapped[datetime] = mapped_column(
         server_default=func.now(), onupdate=func.now()
     )
+
+
+class Page(Base):
+    __tablename__ = "page"
+
+    id: Mapped[uuidpk]
+    content: Mapped[str]
+    expired_at: Mapped[datetime]

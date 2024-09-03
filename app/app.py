@@ -3,10 +3,11 @@ from loguru import logger
 
 from app.logger import LoggerMiddleware
 from app.config import config
-from app.routes import router
+from app import frontend, api
 
 app = FastAPI()
-app.include_router(router)
+app.include_router(api.router)
+app.include_router(frontend.router)
 
 logger.remove()
 logger.add(config.LOGS_PATH, level="INFO", format="{time} {level} {message}")

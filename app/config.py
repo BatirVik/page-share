@@ -15,18 +15,16 @@ class Config(BaseSettings):
         return Path(__file__).parent.parent / value
 
 
-DOTENV_FILENAMES = dict(dev=".env", test=".env.test", prod=".env")
+match os.getenv("ENV"):
+    case "production":
+        dotenv_name = ".env"
+    case "test":
+        dotenv_name = ".env.test"
+    case "development":
+        dotenv_name = ".env.dev"
+    case _ as env:
+        raise ValueError(f"Unknown environment: {env}")
 
-MODE = os.getenv("MODE")
-if MODE is None:
-    raise RuntimeError(
-        "environment variable 'MODE' is not specified. Available values are ['dev', 'test', 'prod']"
-    )
-if MODE not in DOTENV_FILENAMES:
-    raise RuntimeError(
-        f"environment variable 'MODE' is specified with {MODE!r}."
-        " Available values are ['dev', 'test', 'prod']"
-    )
 
-DOTENV_PATH = Path(__file__).parent.parent / "configuration" / DOTENV_FILENAMES[MODE]
-config = Config(_env_file=DOTENV_PATH)  # type: ignore
+dotenv_path = Path(__file__).parent.parent / "configuration" / dotenv_name
+config = Config(_env_file=dotenv_path)  # type: ignore

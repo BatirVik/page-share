@@ -6,7 +6,7 @@ import pytest_asyncio
 from fastapi.testclient import TestClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
-os.environ["MODE"] = "test"  # must be specifed before importing app config
+os.environ["ENV"] = "test"  # must be specifed before importing app config
 
 from app.config import config
 from app.app import app

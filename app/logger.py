@@ -1,41 +1,61 @@
-from __future__ import annotations  # loguru.Logger cannot be used without it
+from typing import Annotated, Awaitable, Callable
+from typing import TYPE_CHECKING
+from uuid import uuid4
 
-from fastapi import Request, Response
-from starlette.middleware.base import BaseHTTPMiddleware
-import loguru
-from starlette.types import ASGIApp
+from fastapi import Depends, Request, Response
+from loguru import logger
+
+from app.config import config
+
+if TYPE_CHECKING:
+    # importing at runtime raises an exception
+    from loguru import Logger
 
 
-class LoggerMiddleware(BaseHTTPMiddleware):
-    def __init__(self, app: ASGIApp, logger: loguru.Logger) -> None:
-        super().__init__(app)
-        self.logger = logger
+id = logger.add(
+    config.LOGS_PATH,
+    format="{time} {level} req-id={extra[request_id]} {message}",
+    level="DEBUG",
+)
 
-    async def dispatch(self, request: Request, call_next) -> Response:
-        if request.client is None:
-            client_host = client_port = "unknown"
-        else:
-            client_host = request.client.host
-            client_port = request.client.port
-        try:
-            response = await call_next(request)
-        except Exception as exc:
-            self.logger.error(
-                "{host}:{port} {method} {path} {exception!r}",
-                host=client_host,
-                port=client_port,
-                method=request.method,
-                path=request.url.path,
-                exception=exc,
-            )
-            raise exc
-        else:
-            self.logger.info(
-                "{host}:{port} {method} {path} {status_code}",
-                host=client_host,
-                port=client_port,
-                method=request.method,
-                path=request.url.path,
-                status_code=response.status_code,
-            )
-            return response
+
+def get_logger(request: Request) -> "Logger":
+    return request.state.logger
+
+
+LoggerDepends = Annotated["Logger", Depends(get_logger)]
+
+
+async def logger_middleware(
+    request: "Request", call_next: Callable[[Request], Awaitable[Response]]
+) -> Response:
+    req_logger = logger.bind(request_id=uuid4())
+    request.state.logger = req_logger
+
+    if request.client is None:
+        client_host = client_port = "unknown"
+    else:
+        client_host = request.client.host
+        client_port = request.client.port
+
+    req_logger.info(
+        "Request {host}:{port} {method} {path}",
+        host=client_host,
+        port=client_port,
+        method=request.method,
+        path=request.url.path,
+    )
+
+    try:
+        response = await call_next(request)
+    except Exception as exc:
+        req_logger.error(
+            "Response 500 | {exception!r}",
+            host=client_host,
+            port=client_port,
+            exception=exc,
+        )
+        raise exc
+    else:
+        req_logger.info("Response {status_code}", status_code=response.status_code)
+        return response

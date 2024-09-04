@@ -1,0 +1,8 @@
+body {
+    height: 100vh;
+}
+
+#page-content:focus {
+    outline: none;
+    border: none;
+}

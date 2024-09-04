@@ -12,4 +12,4 @@ class PageCreate(BaseModel):
 class PageRead(BaseModel):
     id: UUID
     content: str
-    expired_at: datetime
+    expire_at: datetime

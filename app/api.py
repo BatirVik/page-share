@@ -21,7 +21,7 @@ async def add_page(db: SessionDepends, page_scheme: PageCreate) -> Page:
 @router.get("/pages/{page_id}", response_model=PageRead)
 async def get_page(db: SessionDepends, page_id: UUID) -> Page:
     if page := await read_page(db, page_id):
-        if page.expired_at < datetime.now():
+        if page.expire_at > datetime.now():
             return page
         raise HTTPException(410, "Page is no longer available")
     raise HTTPException(404, "Page not found")

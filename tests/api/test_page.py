@@ -14,13 +14,13 @@ async def test_add_page(db: AsyncSession, client: TestClient):
     resp = client.post(
         "api/pages", json={"content": "Hello world!", "minutes_lifetime": 120}
     )
-    assert resp.status_code == 201
+    assert resp.status_code == 201, resp.json()
     page = await db.scalar(select(Page).limit(1))
     assert page is not None
     assert resp.json() == {
         "id": str(page.id),
         "content": "Hello world!",
-        "expired_at": page.expired_at.isoformat(),
+        "expire_at": page.expire_at.isoformat(),
     }
 
 
@@ -30,19 +30,19 @@ async def test_add_page(db: AsyncSession, client: TestClient):
         datetime.now() - timedelta(minutes=10),
     ]
 )
-def expired_at(request: pytest.FixtureRequest) -> datetime:
+def expire_at(request: pytest.FixtureRequest) -> datetime:
     return request.param
 
 
 @pytest.mark.asyncio
-async def test_get_page(db: AsyncSession, client: TestClient, expired_at: datetime):
-    page = Page(expired_at=expired_at, content="Hello world!")
+async def test_get_page(db: AsyncSession, client: TestClient, expire_at: datetime):
+    page = Page(expire_at=expire_at, content="Hello world!")
     db.add(page)
     await db.commit()
 
     resp = client.get(f"api/pages/{page.id}")
 
-    if expired_at > datetime.now():
+    if expire_at < datetime.now():
         assert resp.status_code == 410
         assert resp.json() == {"detail": "Page is no longer available"}
         return
@@ -51,7 +51,7 @@ async def test_get_page(db: AsyncSession, client: TestClient, expired_at: dateti
     assert resp.json() == {
         "id": str(page.id),
         "content": "Hello world!",
-        "expired_at": page.expired_at.isoformat(),
+        "expire_at": page.expire_at.isoformat(),
     }
 
 

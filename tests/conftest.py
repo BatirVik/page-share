@@ -5,7 +5,6 @@ import pytest
 import pytest_asyncio
 from fastapi.testclient import TestClient
 from sqlalchemy.ext.asyncio import AsyncSession
-from loguru import logger
 
 os.environ["MODE"] = "test"  # must be specifed before importing app config
 
@@ -15,11 +14,7 @@ from app.db import session_factory, engine
 from app.models import Base
 
 
-@pytest.fixture(autouse=True, scope="session")
-def logs_life():
-    config.LOGS_PATH.unlink(missing_ok=True)
-    logger.remove()  # remove logger.add from app
-    logger.add(config.LOGS_PATH, format="{time} {level} {message}")
+config.LOGS_PATH.write_text("")  # clear test-logs before tests
 
 
 @pytest_asyncio.fixture(autouse=True)

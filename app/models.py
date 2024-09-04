@@ -20,4 +20,4 @@ class Page(Base):
 
     id: Mapped[uuidpk]
     content: Mapped[str]
-    expired_at: Mapped[datetime]
+    expire_at: Mapped[datetime]

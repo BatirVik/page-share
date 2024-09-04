@@ -6,14 +6,14 @@ from fastapi.routing import APIRouter
 
 from app.db import SessionDepends
 from app.models import Page
-from app.schemes import PageCreate, PageRead
+from app.schemes import PageCreate, PageMetadataRead, PageRead
 from app.crud import create_page, read_page
 
 
 router = APIRouter(prefix="/api")
 
 
-@router.post("/pages", status_code=201, response_model=PageRead)
+@router.post("/pages", status_code=201, response_model=PageMetadataRead)
 async def add_page(db: SessionDepends, page_scheme: PageCreate) -> Page:
     return await create_page(db, page_scheme)
 

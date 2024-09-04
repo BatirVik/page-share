@@ -19,7 +19,6 @@ async def test_add_page(db: AsyncSession, client: TestClient):
     assert page is not None
     assert resp.json() == {
         "id": str(page.id),
-        "content": "Hello world!",
         "expire_at": page.expire_at.isoformat(),
     }
 

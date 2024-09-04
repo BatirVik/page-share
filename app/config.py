@@ -2,13 +2,17 @@ import os
 from pathlib import Path
 
 from pydantic_settings import BaseSettings
-from pydantic import PostgresDsn
+from pydantic import PostgresDsn, field_validator
 
 
 class Config(BaseSettings):
     DB_URL: PostgresDsn
     LOGS_PATH: Path
     PORT: int
+
+    @field_validator("LOGS_PATH")
+    def absolute_path(cls, value: Path):
+        return Path(__file__).parent.parent / value
 
 
 DOTENV_FILENAMES = dict(dev=".env", test=".env.test", prod=".env")

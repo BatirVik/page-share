@@ -24,9 +24,9 @@ async def read_page(
 ) -> Page | None:
     stmt = select(Page).where(Page.id == page_id).limit(1)
     if expired is True:
-        stmt = stmt.where(Page.expire_at < func.now())
+        stmt = stmt.where(Page.expire_at < datetime.now())
     elif expired is False:
-        stmt = stmt.where(Page.expire_at > func.now())
+        stmt = stmt.where(Page.expire_at > datetime.now())
     return await db.scalar(stmt)
 
 
@@ -35,7 +35,7 @@ async def read_page_content(
 ) -> str | None:
     stmt = select(Page.content).where(Page.id == page_id).limit(1)
     if expired is True:
-        stmt = stmt.where(Page.expire_at < func.now())
+        stmt = stmt.where(Page.expire_at < datetime.now())
     elif expired is False:
-        stmt = stmt.where(Page.expire_at > func.now())
+        stmt = stmt.where(Page.expire_at > datetime.now())
     return await db.scalar(stmt)

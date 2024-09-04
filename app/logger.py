@@ -11,8 +11,7 @@ if TYPE_CHECKING:
     # importing at runtime raises an exception
     from loguru import Logger
 
-
-id = logger.add(
+logger.add(
     config.LOGS_PATH,
     format="{time} {level} req-id={extra[request_id]} {message}",
     level="DEBUG",

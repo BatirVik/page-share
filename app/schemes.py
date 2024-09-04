@@ -13,3 +13,8 @@ class PageRead(BaseModel):
     id: UUID
     content: str
     expire_at: datetime
+
+
+class PageMetadataRead(BaseModel):
+    id: UUID
+    expire_at: datetime

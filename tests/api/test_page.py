@@ -55,7 +55,7 @@ async def test_get_page(db: AsyncSession, client: TestClient, expire_at: datetim
 
 
 @pytest.mark.asyncio
-async def test_get_not_exists_page(db: AsyncSession, client: TestClient):
+async def test_get_not_exists_page(client: TestClient):
     resp = client.get(f"api/pages/{uuid4()}")
     assert resp.status_code == 404
     assert resp.json() == {"detail": "Page not found"}

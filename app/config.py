@@ -11,7 +11,7 @@ class Config(BaseSettings):
     PORT: int
 
     @field_validator("LOGS_PATH")
-    def absolute_path(cls, value: Path):
+    def absolute_path(cls, value: Path) -> Path:
         return Path(__file__).parent.parent / value
 
 

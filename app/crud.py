@@ -3,7 +3,6 @@ from datetime import datetime, timedelta
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import func
 
 from app.models import Page
 from app.schemes import PageCreate

@@ -1,0 +1,30 @@
+services:
+  web:
+    build: .
+    container_name: page-share-web
+    restart: always
+    working_dir: /app
+    command: bash -c "poetry run alembic upgrade head && poetry run uvicorn app.main:app --host 0.0.0.0 --port 8000"
+    ports:
+      - "8000:8000"
+    env_file:
+      - configuration/.env
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+  db:
+    image: postgres:16-alpine
+    container_name: page-share-postgres
+    environment:
+      POSTGRES_USER: deadpool
+      POSTGRES_PASSWORD: x-force
+      POSTGRES_DB: app
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data:cached
+
+volumes:
+  postgres_data:
+    driver: local

@@ -9,7 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 os.environ["ENV"] = "test"  # must be specifed before importing app config
 
 from app.config import config
-from app.app import app
+from app.main import app
 from app.db import session_factory, engine
 from app.models import Base
 

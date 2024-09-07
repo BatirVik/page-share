@@ -8,7 +8,6 @@ from pydantic import PostgresDsn, field_validator
 class Config(BaseSettings):
     DB_URL: PostgresDsn
     LOGS_PATH: Path
-    PORT: int
 
     @field_validator("LOGS_PATH")
     def absolute_path(cls, value: Path) -> Path:

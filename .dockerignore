@@ -1,0 +1,7 @@
+.*
+pyrightconfig.json
+__pycache__
+tests
+
+Dockerfile
+docker-compose.yml

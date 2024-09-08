@@ -24,7 +24,7 @@ To access the logger from a request, use **get_logger()** or the **LoggerDepends
 ## Migrations - alembic
 To create migration file:
 ```bash
-poetry run alembic revision --autogenerate
+poetry run alembic revision --autogenerate -m "message"
 ```
 To apply migrations:
 ```bash

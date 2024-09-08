@@ -4,18 +4,18 @@ const copyContentBtn = document.getElementById("copy-content-btn");
 const pageContentDiv = document.getElementById("page-content");
 
 createLinkBtn.onclick = async () => {
-  const url = await getPageUrl(pageContentDiv.innerText, timeSelect.value);
+  const url = await getPageUrl(pageContentDiv.value, timeSelect.value);
   await navigator.clipboard.writeText(url);
   alert("Url copied to clipboard");
 };
 
 copyContentBtn.onclick = async () => {
-  await navigator.clipboard.writeText(pageContentDiv.innerText);
+  await navigator.clipboard.writeText(pageContentDiv.value);
   alert("Content copied to clipboard");
 };
 
 pageContentDiv.oninput = async () => {
-  isEmpty = pageContentDiv.innerText.length === 0;
+  isEmpty = pageContentDiv.value.length === 0;
   createLinkBtn.disabled = isEmpty;
   if (isEmpty) {
     createLinkBtn.classList.remove("btn-success");

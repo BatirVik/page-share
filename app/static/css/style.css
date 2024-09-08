@@ -2,7 +2,13 @@ body {
     height: 100vh;
 }
 
-#page-content:focus {
+#page-content {
     outline: none;
-    border: none;
+    border-style: none;
+    resize: none;
+}
+
+#page-content:disabled {
+    background-color: transparent;
+    color: black;
 }
